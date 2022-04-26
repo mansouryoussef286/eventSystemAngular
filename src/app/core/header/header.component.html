@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <div>
+            <img src="./../../../assets/images/iti-logo.png" alt="iti logo" class="img-logo">
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isStudent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" routerLink="/student/home/1">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" [routerLink]="['/student/editProfile/',studentID]">Edit Profile</a>
+                    </li>
+
+                    <!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Dropdown
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li> -->
+                </ul>
+            </div>
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isSpeaker">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" routerLink="/speaker/home/1">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" [routerLink]="['/speaker/editProfile/',studentID]">Edit Profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAdmin">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" routerLink="/admin/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" routerLink="/admin/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" routerLink="/admin/speakers">Speakers</a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="navbar-nav  mb-2 mb-lg-0" *ngIf="loggedIn">
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger mx-2" routerLink="/logout">log out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

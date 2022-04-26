@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">number</th>
+            <th scope="col">title</th>
+            <th scope="col">date</th>
+            <th scope="col">main speaker</th>
+            <th scope="col">speakers</th>
+            <th scope="col">operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let event of events let i=index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{event.title}}</td>
+            <td>{{event.date|date:"short"}}</td>
+            <td>{{event.mainSpeaker.username}}</td>
+            <td>
+                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                    <td>{{speaker.username}}</td>
+                </tr>
+            </td>
+            <td>
+                <a [routerLink]="['/speaker/details/',event._id]" class="btn btn-outline-success">details</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

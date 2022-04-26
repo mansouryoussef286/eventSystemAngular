@@ -1,0 +1,59 @@
+<div class="container-xl px-4 ">
+    <!-- Account page navigation-->
+    <div class="row">
+        <div class="offset-2 col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <!-- Form Group (Email address)-->
+                    <div class="mb-3">
+                        <label class="small mb-1">Email address</label>
+                        <input [(ngModel)]="speaker.Email" class="form-control" type="Email" placeholder="Enter your Email address">
+                    </div>
+                    <!-- Form Group (username)-->
+                    <div class="mb-3">
+                        <label class="small mb-1">Username</label>
+                        <input [(ngModel)]="speaker.username" class="form-control" type="Email" placeholder="Enter your username">
+                    </div>
+                    <!-- Form Group (password)-->
+                    <div class="mb-3">
+                        <label class="small mb-1">Password</label>
+                        <input [(ngModel)]="speaker.password" class="form-control" type="password" placeholder="Enter your password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="small mb-1">Confirm password</label>
+                        <input [(ngModel)]="confirmPw" class="form-control" type="password" placeholder="confirm your password">
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group (city)-->
+                        <div class="col-md-4">
+                            <label class="small mb-1">city</label>
+                            <input [(ngModel)]="speaker.address.city" class="form-control" type="text" placeholder="Enter your city">
+                        </div>
+                        <!-- Form Group (street)-->
+                        <div class="col-md-4">
+                            <label class="small mb-1">street</label>
+                            <input [(ngModel)]="speaker.address.street" class="form-control" type="text" placeholder="Enter your street">
+                        </div>
+                        <!-- Form Group (building)-->
+                        <div class="col-md-4">
+                            <label class="small mb-1">building</label>
+                            <input [(ngModel)]="speaker.address.building" class="form-control" type="text" placeholder="Enter your building">
+                        </div>
+                    </div>
+
+                    <!-- Form Group (success and failure messages)-->
+                    <div class="text-danger w-100 mb-3">
+                        {{errorMsg}}
+                    </div>
+                    <div class="text-success w-100 mb-3">
+                        {{successMsg}}
+                    </div>
+                    <!-- Save changes button-->
+                    <a class="btn btn-primary" type="button" (click)="update()">Save changes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

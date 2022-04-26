@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">title</th>
+            <th scope="col">date</th>
+            <th scope="col">main speaker</th>
+            <th scope="col">speakers</th>
+            <th scope="col">students</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{event.title}}</td>
+            <td>{{event.date|date:"short"}}</td>
+            <td>{{event.mainSpeaker.username}}</td>
+            <td>
+                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                    <td>{{speaker.username}}</td>
+                </tr>
+            </td>
+            <td>
+                <tr *ngFor="let student of event.students let i=index">
+                    <td>{{student.Email}}</td>
+                </tr>
+            </td>
+        </tr>
+    </tbody>
+</table>

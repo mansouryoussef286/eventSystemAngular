@@ -1,0 +1,38 @@
+<div class="d-flex">
+    <!-- filter  -->
+    <div class="mx-3 col-4">
+        <input type="text" class="form-control" placeholder="search events" [(ngModel)]="searchText">
+    </div>
+    <!-- add button -->
+    <a class="btn btn-primary" routerLink="add">Add event</a>
+</div>
+<hr>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">number</th>
+            <th scope="col">title</th>
+            <th scope="col">date</th>
+            <th scope="col">main speaker</th>
+            <th scope="col">speakers</th>
+            <th scope="col">operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let event of events|filterArray:searchText let i=index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{event.title}}</td>
+            <td>{{event.date|date:"short"}}</td>
+            <td>{{event.mainSpeaker.username}}</td>
+            <td>
+                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                    <td>{{speaker.username}}</td>
+                </tr>
+            </td>
+            <td>
+                <a [routerLink]="['edit/',event._id]" class="btn btn-outline-dark">edit</a>
+                <a (click)="deleteEvent(event)" class="btn btn-outline-dark">delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,27 @@
+<div class="d-flex">
+    <!-- filter  -->
+    <div class="mx-3 col-4">
+        <input type="text" class="form-control" placeholder="search events" [(ngModel)]="searchText">
+    </div>
+</div>
+<hr>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">number</th>
+            <th scope="col">id</th>
+            <th scope="col">email</th>
+            <th scope="col">operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let student of students|filterStudentArray:searchText let i=index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{student._id}}</td>
+            <td>{{student.Email}}</td>
+            <td>
+                <a (click)="deletStudent(student)" class="btn btn-outline-dark">delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
