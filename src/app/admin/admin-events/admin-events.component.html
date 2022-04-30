@@ -23,9 +23,9 @@
             <th scope="row">{{i+1}}</th>
             <td>{{event.title}}</td>
             <td>{{event.date|date:"short"}}</td>
-            <td>{{event.mainSpeaker.username}}</td>
+            <td>{{event.mainSpeakerID.username}}</td>
             <td>
-                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                <tr *ngFor="let speaker of event.otherSpeakersID let i=index">
                     <td>{{speaker.username}}</td>
                 </tr>
             </td>

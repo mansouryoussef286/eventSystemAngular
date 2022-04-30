@@ -9,7 +9,7 @@ import { Speaker } from 'src/app/_models/speaker';
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
-  speakerID:string="0";
+  speakerID:string="";
   speaker:Speaker = new Speaker("","","","",{city:"",street:"",building:""});
   confirmPw:string="";
   errorMsg:string="";
@@ -19,7 +19,13 @@ export class EditProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.speakerID = this.ar.snapshot.params['id'];
-    this.speaker = this.speakerSrv.getSpeakerByID(this.speakerID);
+    this.speakerSrv.getSpeakerByID(this.speakerID).subscribe(
+      data=>{
+        // console.log(data);
+        this.speaker = data.data[0];
+      },
+      error=>{alert(error.error.message);}
+    );
   }
 
   update():void{
@@ -36,11 +42,23 @@ export class EditProfileComponent implements OnInit {
           this.errorMsg = "";
         },3000);
       }else{
-        this.speakerSrv.updateSpeaker(this.speaker._id,this.speaker);
-        this.successMsg = "info updated successfully";
-        setTimeout(()=>{
-          this.router.navigateByUrl("/speaker/home/"+ this.speakerID);
-        },2000);
+        this.speakerSrv.updateSpeaker(this.speaker._id,this.speaker).subscribe(
+          data=>{
+            // console.log(data);
+            if(data.message.includes("updated")){
+              this.successMsg = "info updated successfully";
+              setTimeout(()=>{
+                this.router.navigateByUrl("/student/home/"+ this.speakerID);
+              },2000);
+            }
+          },
+          error=>{
+            this.errorMsg = error.error.message;
+            setTimeout(()=>{
+              this.errorMsg = "";
+            },3000);
+          }
+        );
       }
     }
   }

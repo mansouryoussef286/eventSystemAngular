@@ -11,19 +11,35 @@ import { Student } from 'src/app/_models/student';
 export class AdminStudentsComponent implements OnInit {
 
   students:Student[]=[];
-  studentID:number = 0;
   searchText:string = "";
   constructor(public stdSrv:StudentService, public ar:ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.studentID = this.ar.snapshot.params['id'];
-    this.students = this.stdSrv.getStudents();
+    this.stdSrv.getStudents().subscribe(
+      data=>{
+        // console.log(data);
+        this.students = data.data;
+      },
+      error=>{
+        alert(error.error.message);
+      }
+    );
   }
 
   deletStudent(student:Student){
     if(confirm(`delete student: ${student.Email}?`)){
-      this.stdSrv.deleteStudent(student._id);
-      alert("student deleted!");
+      this.stdSrv.deleteStudent(student._id).subscribe(
+        data=>{
+          // console.log(data);
+          if(data.message.includes("delete")){
+            alert("student deleted!");
+            this.ngOnInit();
+          }
+        },
+        error=>{
+          alert(error.error.message);
+        }
+      );
     }
   }
 

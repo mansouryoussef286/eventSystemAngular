@@ -19,12 +19,13 @@ export class EditProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.studentID = this.ar.snapshot.params['id'];
-    this.stdSrv.getStudentByID2(this.studentID).subscribe(
-      a=>{
-      console.log(a);
-      this.student = a.data[0];
+    this.stdSrv.getStudentByID(this.studentID).subscribe(
+      data=>{
+        // console.log(data);
+        this.student = data.data[0];
       },
-      error=>{console.log(error)}
+      error=>{
+        alert(error.error.message);}
     );
   }
 
@@ -42,11 +43,23 @@ export class EditProfileComponent implements OnInit {
           this.errorMsg = "";
         },3000);
       }else{
-        this.stdSrv.updateStudent(this.student._id, this.student);
-        this.successMsg = "info updated successfully";
-        setTimeout(()=>{
-          this.router.navigateByUrl("/student/home/"+ this.studentID);
-        },2000);
+        this.stdSrv.updateStudent(this.studentID, this.student).subscribe(
+          data=>{
+            // console.log(data);
+            if(data.message.includes("updated")){
+              this.successMsg = "info updated successfully";
+              setTimeout(()=>{
+                this.router.navigateByUrl("/student/home/"+ this.studentID);
+              },2000);
+            }
+          },
+          error=>{
+            this.errorMsg = error.error.message;
+            setTimeout(()=>{
+              this.errorMsg = "";
+            },3000);
+          }
+        );
       }
     }
   }

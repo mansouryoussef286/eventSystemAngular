@@ -19,13 +19,30 @@ export class AdminEventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.studentID = this.ar.snapshot.params['id'];
-    this.events = this.eventSrv.getEvents();
+    this.eventSrv.getEvents().subscribe(
+      data=>{
+        // console.log(data.data);
+        this.events = data.data;
+      },
+      error=>{
+        alert(error.error.message);}
+    );
   }
 
   deleteEvent(event:Event){
     if(confirm(`delete event: ${event.title}?`)){
-      this.eventSrv.deleteEventByID(event._id);
-      alert("event deleted!");
+      this.eventSrv.deleteEventByID(event._id).subscribe(
+        data=>{
+          // console.log(data);
+          if(data.message.includes("delete")){
+            alert("event deleted!");
+            this.ngOnInit();
+          }
+        },
+        error=>{
+          alert(error.error.message);
+        }
+      );
     }
   }
 

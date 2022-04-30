@@ -11,13 +11,21 @@ import { Speaker } from 'src/app/_models/speaker';
 })
 export class EventDetailsComponent implements OnInit {
   eventID:number=0;
-  event:Event=new Event(0,"",new Date(),new Speaker("","","","",{city:"",street:"",building:""}),[],[]);
+  event:Event=new Event(0,"","  ",new Speaker("","","","",{city:"",street:"",building:""}),[],[]);
 
-  constructor(public eventSrv:EventService, public ar:ActivatedRoute) { }
+  constructor(public EventSrv:EventService, public ar:ActivatedRoute) { }
 
   ngOnInit(): void {
     this.eventID = this.ar.snapshot.params['id'];
-    this.event = this.eventSrv.getEventByID(this.eventID);
+    this.EventSrv.getEventByID(this.eventID).subscribe(
+      data=>{
+        // console.log(data.data);
+        this.event = data.data[0];
+        this.event.date = this.event.date.split('T')[0];
+      },
+      error=>{
+        alert(error.error.message);}
+    );
   }
 
 }

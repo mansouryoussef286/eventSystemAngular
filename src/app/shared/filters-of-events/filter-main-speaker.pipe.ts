@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Speaker } from 'src/app/_models/speaker';
 
 @Pipe({
-  name: 'filterMainSpeaker'
+  name: 'filterMainSpeaker',
+  pure:false
 })
 export class FilterMainSpeakerPipe implements PipeTransform {
 

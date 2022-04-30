@@ -15,13 +15,31 @@ export class AdminSpeakersComponent implements OnInit {
   constructor(public speakerSrv:SpeakerService, public ar:ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.speakers = this.speakerSrv.getSpeakers();
+    this.speakerSrv.getSpeakers().subscribe(
+      data=>{
+        // console.log(data);
+        this.speakers = data.data;
+      },
+      error=>{
+        alert(error.error.message);
+      }
+    );
   }
 
   deletSpeaker(speaker:Speaker){
     if(confirm(`delete speaker: ${speaker.username}?`)){
-      this.speakerSrv.deleteSpeaker(speaker._id);
-      alert("speaker deleted!");
+      this.speakerSrv.deleteSpeaker(speaker._id).subscribe(
+        data=>{
+          // console.log(data);
+          if(data.message.includes("delete")){
+            alert("speaker deleted!");
+            this.ngOnInit();
+          }
+        },
+        error=>{
+          alert(error.error.message);
+        }
+      );
     }
   }
 

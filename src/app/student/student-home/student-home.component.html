@@ -14,9 +14,9 @@
             <th scope="row">{{i+1}}</th>
             <td>{{event.title}}</td>
             <td>{{event.date|date:"short"}}</td>
-            <td>{{event.mainSpeaker.username}}</td>
+            <td>{{event.mainSpeakerID.username}}</td>
             <td>
-                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                <tr *ngFor="let speaker of event.otherSpeakersID let i=index">
                     <td>{{speaker.username}}</td>
                 </tr>
             </td>
@@ -26,3 +26,10 @@
         </tr>
     </tbody>
 </table>
+
+<div *ngIf="errorMsg" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>welcome! </strong> {{errorMsg}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

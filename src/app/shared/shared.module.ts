@@ -16,7 +16,7 @@ import { FilterSpeakerArrayPipe } from './filter-speaker-array.pipe';
     FilterSpeakersPipe,
     FilterStudentsPipe,
     FilterStudentArrayPipe,
-    FilterSpeakerArrayPipe
+    FilterSpeakerArrayPipe,
   ],
   imports: [
     CommonModule

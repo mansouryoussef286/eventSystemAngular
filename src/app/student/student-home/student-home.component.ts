@@ -13,11 +13,22 @@ export class StudentHomeComponent implements OnInit {
 
   events:Event[]=[];
   studentID:number = 0;
+  errorMsg:string="";
   constructor(public eventSrv:EventService, public ar:ActivatedRoute) { }
 
   ngOnInit(): void {
     this.studentID = this.ar.snapshot.params['id'];
-    this.events = this.eventSrv.getEventsByStudentID(this.studentID);
+    this.eventSrv.getEventsByStudentID(this.studentID).subscribe(
+      data=>{
+        // console.log(data);
+        if(data.message.includes("no events")){
+          this.errorMsg = "No events assigned for you yet :)";
+        }else{
+          this.events = data.data;
+        }
+      },
+      error=>alert(error.error.message)
+    );
   }
 
 }

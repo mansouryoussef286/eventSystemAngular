@@ -11,13 +11,21 @@ import { Event } from 'src/app/_models/event';
 export class SpeakerHomeComponent implements OnInit {
 
   events:Event[]=[];
-  studentID:number = 0;
+  speakerID:string="";
+  errorMsg:string="";
   constructor(public eventSrv:EventService, public ar:ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.studentID = this.ar.snapshot.params['id'];
-    this.events = this.eventSrv.getEventsByStudentID(this.studentID);
+    this.speakerID = this.ar.snapshot.params['id'];
+    this.eventSrv.getEventsBySpeakerID(this.speakerID).subscribe(
+      data=>{
+        if(data.message.includes("no events")){
+          this.errorMsg = "No events assigned for you yet :)";
+        }else{
+          this.events = data.data;
+        }
+      },
+      error=>alert(error.error.message)
+    );
   }
-
-
 }

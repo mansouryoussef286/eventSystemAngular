@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DbMockService } from './db-mock.service';
 import { Speaker } from './_models/speaker';
 
 @Injectable({
@@ -7,26 +7,30 @@ import { Speaker } from './_models/speaker';
 })
 export class SpeakerService {
   
-  speakerArrayTemp:Speaker[]=[
-      new Speaker("1","speaker@email.com","youssef","",{city:"",street:"",building:""}),
-      new Speaker("10","speaker@email.com","torky","",{city:"",street:"",building:""}),
-      new Speaker("2","speaker@email.com","speaker name 1","",{city:"",street:"",building:""}),
-      new Speaker("3","speaker@email.com","speaker name 2","",{city:"",street:"",building:""}),
-      new Speaker("4","speaker@email.com","speaker name 3","",{city:"",street:"",building:""}),
-      new Speaker("5","speaker@email.com","speaker name 4","",{city:"",street:"",building:""}),
-  ]
-  constructor(public dbSrv:DbMockService) { }
+  baseUrl:string= "http://localhost:2525/speakers/";
+  constructor(public http:HttpClient) { }
 
-  getSpeakerByID(id:string):Speaker{
-    return this.dbSrv.speakerArrayTemp.find(s=>s._id == id)?? new Speaker("0","","","",{city:"",street:"",building:""});
+  getSpeakerByID(id:string){
+    return this.http.get<{message: string ,data: Speaker[]}>(this.baseUrl + id);
   }
   updateSpeaker(id:string, speaker:Speaker){
-
+    return this.http.put<{message: string}>(this.baseUrl,
+      {
+        id: id,
+        email: speaker.Email,
+        username: speaker.username,
+        password: speaker.password,
+        address: {
+            city: speaker.address.city,
+            street: speaker.address.street,
+            building: speaker.address.building
+        }
+    });
   }
-  getSpeakers():Speaker[]{
-    return this.dbSrv.speakerArrayTemp;
+  getSpeakers(){
+    return this.http.get<{message: string ,data: Speaker[]}>(this.baseUrl);
   }
   deleteSpeaker(id:string){
-    
+    return this.http.delete<{message: string}>(this.baseUrl + id);
   }
 }

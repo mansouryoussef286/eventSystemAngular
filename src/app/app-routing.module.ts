@@ -19,6 +19,7 @@ import { AddEventComponent } from './admin/add-event/add-event.component';
 import { EditEventComponent } from './admin/edit-event/edit-event.component';
 import { AdminStudentsComponent } from './admin/admin-students/admin-students.component';
 import { AdminSpeakersComponent } from './admin/admin-speakers/admin-speakers.component';
+import { NotfoundComponent } from './core/notfound/notfound.component';
 
 const routes: Routes = [
   {path: "login", component:LoginComponent},
@@ -39,6 +40,9 @@ const routes: Routes = [
   {path: "admin/students", component:AdminStudentsComponent},
   {path: "admin/speakers", component:AdminSpeakersComponent},
   {path: "admin/speakers/edit/:id", component:AdminEditSpeakersComponent},
+
+  {path: "", component:LoginComponent},
+  {path: "**", component:NotfoundComponent},
 ];
 
 @NgModule({

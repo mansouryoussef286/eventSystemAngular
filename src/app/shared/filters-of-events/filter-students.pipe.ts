@@ -7,22 +7,16 @@ import { Student } from '../../_models/student';
 })
 export class FilterStudentsPipe implements PipeTransform {
 
-  transform(students: Student[], eventStudents:Student[]): Student[] {
-    // console.log("event students");
-    // console.log(eventStudents);
-    // console.log("all students");
-    // console.log(students);
-    
+  transform(value: Student[], eventStudents:Student[]): Student[] {
+    let eventStudentIDs:number[]=[];
     let filteredArray:Student[] = [];
-    for (let student of students) {
-      // console.log(student)
-      // console.log(!students.includes(student))
-      if(eventStudents.includes(student) == false)
-        filteredArray.push(student);
+    for (let es of eventStudents) {
+      eventStudentIDs.push(es._id);
     }
-    // console.log("filtered array")
-    // console.log(filteredArray)
+    value.forEach(s=>{
+      if(!eventStudentIDs.includes(s._id))
+        filteredArray.push(s);
+    })
     return filteredArray;
   }
-
 }

@@ -21,7 +21,13 @@ export class AdminEditSpeakersComponent implements OnInit {
 
   ngOnInit(): void {
     this.speakerID = this.ar.snapshot.params['id'];
-    this.speaker = this.speakerSrv.getSpeakerByID(this.speakerID);
+    this.speakerSrv.getSpeakerByID(this.speakerID).subscribe(
+      data=>{
+        console.log(data);
+        this.speaker = data.data[0];
+      },
+      error=>{alert(error.error.message);}
+    );
   }
 
   update():void{
@@ -32,11 +38,10 @@ export class AdminEditSpeakersComponent implements OnInit {
         this.errorMsg = "";
       },3000);
     }else{
-      
         this.speakerSrv.updateSpeaker(this.speaker._id,this.speaker);
         this.successMsg = "info updated successfully";
         setTimeout(()=>{
-          this.router.navigateByUrl("/speaker/home/"+ this.speakerID);
+          this.router.navigateByUrl("/admin/speakers");
         },2000);
     }
   }

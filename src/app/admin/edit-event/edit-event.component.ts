@@ -17,18 +17,10 @@ import { Student } from 'src/app/_models/student';
 })
 export class EditEventComponent implements OnInit {
   eventID:number=0;
-  event:Event = new Event(0,
-    "event title",
-    new Date("2022,1,25"),
-    new Speaker("1","speaker@email.com","main speaker name","",{city:"",street:"",building:""}),
-    [
-      new Speaker("2","speaker@email.com","speaker name 1","",{city:"",street:"",building:""}),
-      new Speaker("3","speaker@email.com","speaker name 2","",{city:"",street:"",building:""}),
-    ],
-    [
-      new Student(1,"student@email.com",""),
-      new Student(2,"student@email.com",""),
-    ]);
+  event:Event = new Event(0,"","",new Speaker("","","","",{city:"",street:"",building:""}),[], []);
+
+
+  date:string="";
 
   errorMsg:string="";
   successMsg:string="";
@@ -42,25 +34,62 @@ export class EditEventComponent implements OnInit {
   constructor(public EventSrv:EventService, public stdSrv:StudentService, public speakerSrv:SpeakerService, public ar:ActivatedRoute, public router:Router) { }
 
   ngOnInit(): void {
-    this.allStudents = this.stdSrv.getStudents();
-    this.allSpeakers = this.speakerSrv.getSpeakers();
+    // get the selected event
     this.eventID = this.ar.snapshot.params['id'];
-    this.event = this.EventSrv.getEventByID(this.eventID);
+    this.EventSrv.getEventByID(this.eventID).subscribe(
+      data=>{
+        // console.log(data.data);
+        this.event = data.data[0];
+        this.event.date = this.event.date.split('T')[0];
+      },
+      error=>{
+        alert(error.error.message);}
+    );
+    // get all students
+    this.stdSrv.getStudents().subscribe(
+      data=>{
+        // console.log(data.data);
+        this.allStudents = data.data;
+      },
+      error=>{
+        alert(error.error.message);}
+    );
+    // get all speakers
+    this.speakerSrv.getSpeakers().subscribe(
+      data=>{
+        // console.log(data.data);
+        this.allSpeakers = data.data;
+      },
+      error=>{
+        alert(error.error.message);}
+    );
   }
 
   update():void{
-    if(!this.event.title || !this.event.date || !this.event.mainSpeaker)
+    if(!this.event.title || !this.event.date || !this.event.mainSpeakerID)
     {
       this.errorMsg = "please fill the form";
       setTimeout(()=>{
         this.errorMsg = "";
       },3000);
     }else{
-        this.EventSrv.updateEvent(this.event._id,this.event);
-        this.successMsg = "info updated successfully";
-        setTimeout(()=>{
-          this.router.navigateByUrl("/admin/events");
-        },2000);
+        this.EventSrv.updateEvent(this.event._id,this.event).subscribe(
+          data=>{
+            // console.log(data);
+            if(data.message.includes("updated")){
+              this.successMsg = "info updated successfully";
+              setTimeout(()=>{
+                this.router.navigateByUrl("/admin/events");
+              },2000);
+            }
+          },
+          error=>{
+            this.errorMsg = error.error.message;
+            setTimeout(()=>{
+              this.errorMsg = "";
+            },3000);
+          }
+        );
     }
   }
 
@@ -83,40 +112,65 @@ export class EditEventComponent implements OnInit {
   addSpeaker(id:string){
     // adding the main speaker
     if(this.showMainSpeaker){
-      let newMainSpeaker = this.speakerSrv.getSpeakerByID(id);
-      if(newMainSpeaker._id == "0"){
-        alert("this speaker is currently unavailable!");
-      }
-      else{
-        this.event.mainSpeaker = newMainSpeaker;
-      }
+      let newMainSpeaker:Speaker;
+      this.speakerSrv.getSpeakerByID(id).subscribe(
+        data=>{
+          // console.log(data.data);
+          newMainSpeaker = data.data[0];
+          if(newMainSpeaker._id == "0"){
+            alert("this speaker is currently unavailable!");
+          }
+          else{
+            this.event.mainSpeakerID = newMainSpeaker;
+          }
+        },
+        error=>{
+          alert(error.error.message);}
+      );
     }else{
+      let newSpeaker:Speaker;
       // adding other speakers
-      let newSpeaker = this.speakerSrv.getSpeakerByID(id);
-      if(newSpeaker._id == "0"){
-        alert("this speaker is currently unavailable!");
-      }else{
-        if(this.event.mainSpeaker._id == newSpeaker._id)
-          alert("this is the main speaker already");
-        else
-          this.event.otherSpeakers.push(newSpeaker);
-      }
+      this.speakerSrv.getSpeakerByID(id).subscribe(
+        data=>{
+          // console.log(data.data);
+          newSpeaker = data.data[0];
+          if(newSpeaker._id == "0"){
+            alert("this speaker is currently unavailable!");
+          }else{
+            if(this.event.mainSpeakerID._id == newSpeaker._id)
+              alert("this is the main speaker already");
+            else
+              this.event.otherSpeakersID.push(newSpeaker);
+          }
+        },
+        error=>{
+          alert(error.error.message);}
+      );
     }
   }
   removeSpeaker(i:number){
-    this.event.otherSpeakers.splice(i,1);
+    this.event.otherSpeakersID.splice(i,1);
   }
 
   addStudent(id:number){
-    let newStudent = this.stdSrv.getStudentByID(id);
-    if(newStudent._id == 0){
-      alert("this speaker is currently unavailable!");
-    }else{
-      this.event.students.push(newStudent);
-    }
+    let newStudent:Student;
+    this.stdSrv.getStudentByID(id).subscribe(
+      data=>{
+        // console.log(data.data);
+        newStudent = data.data[0];
+        if(newStudent._id == 0){
+          alert("this student is currently unavailable!");
+        }else{
+          this.event.studentsID.push(newStudent);
+          console.log(this.event);
+        }
+      },
+      error=>{
+        alert(error.error.message);}
+    );
   }
   removeStudent(i:number){
-      this.event.students.splice(i,1);
+      this.event.studentsID.splice(i,1);
   }
 
 }

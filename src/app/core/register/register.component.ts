@@ -33,11 +33,26 @@ export class RegisterComponent implements OnInit {
     this.speakerRegister= this.speakerRegister?false:true;
   }
   register(){
-    let num=0;
     if(this.studentRegister){
       if(this.student.Email && this.student.password && this.confirmPw){
         if(this.student.password == this.confirmPw){
-          num = this.registerSrv.checkStudentCredentials(this.student);
+          this.registerSrv.checkStudentCredentials(this.student).subscribe(
+            data=>{
+              if(data.message.includes("added")){
+                this.successMsg = "registered successfully";
+                setTimeout(()=>{
+                  this.successMsg = "";
+                  this.router.navigateByUrl("/login");
+                },2000);
+              }
+            },
+            error=>{
+              this.errorMsg = error.error.message;
+              setTimeout(()=>{
+                this.errorMsg = "";
+              },3000);
+            }
+          )
         }else{
           this.errorMsg = "passwords dont match";
           setTimeout(()=>{
@@ -54,7 +69,24 @@ export class RegisterComponent implements OnInit {
     else{
       if(this.speaker.Email && this.speaker.password && this.confirmPw && this.speaker.username){
         if(this.speaker.password == this.confirmPw){
-          num = this.registerSrv.checkSpeakerCredentials(this.speaker);
+          this.registerSrv.checkSpeakerCredentials(this.speaker).subscribe(
+            data=>{
+              console.log(data);
+              if(data.message.includes("added")){
+                this.successMsg = "registered successfully";
+                setTimeout(()=>{
+                  this.successMsg = "";
+                  this.router.navigateByUrl("/login");
+                },2000);
+              }
+            },
+            error=>{
+              this.errorMsg = error.error.message;
+              setTimeout(()=>{
+                this.errorMsg = "";
+              },3000);
+            }
+          );
         }else{
           this.errorMsg = "passwords dont match";
           setTimeout(()=>{
@@ -67,13 +99,6 @@ export class RegisterComponent implements OnInit {
             this.errorMsg = "";
           },3000);
       }
-    }
-
-    if(num >0){
-      this.successMsg = "registered successfully";
-      setTimeout(()=>{
-        this.router.navigateByUrl("/login");
-      },2000);
     }
   }
 }

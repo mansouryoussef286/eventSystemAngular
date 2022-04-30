@@ -12,14 +12,14 @@
         <tr>
             <td>{{event.title}}</td>
             <td>{{event.date|date:"short"}}</td>
-            <td>{{event.mainSpeaker.username}}</td>
+            <td>{{event.mainSpeakerID.username}}</td>
             <td>
-                <tr *ngFor="let speaker of event.otherSpeakers let i=index">
+                <tr *ngFor="let speaker of event.otherSpeakersID let i=index">
                     <td>{{speaker.username}}</td>
                 </tr>
             </td>
             <td>
-                <tr *ngFor="let student of event.students let i=index">
+                <tr *ngFor="let student of event.studentsID let i=index">
                     <td>{{student.Email}}</td>
                 </tr>
             </td>

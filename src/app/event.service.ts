@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DbMockService } from './db-mock.service';
 import { StudentService } from './student.service';
 import { Event } from './_models/event';
 import { Speaker } from './_models/speaker';
@@ -11,56 +11,75 @@ import { Student } from './_models/student';
 })
 export class EventService {
 
-  // eventArrayTemp:Event[]=[
-  //     new Event(0,"first event title",new Date("2022-10-2"),
-  //       new Speaker("1","speaker@email.com","youssef","",{city:"",street:"",building:""}),
-  //       [
-  //         new Speaker("2","speaker@email.com","speaker name 1","",{city:"",street:"",building:""}),
-  //         new Speaker("3","speaker@email.com","speaker name 2","",{city:"",street:"",building:""}),
-  //       ],
-  //       [
-  //         new Student(1,"student1@email.com",""),
-  //         new Student(2,"student2@email.com",""),
-  //         new Student(3,"student3@email.com",""),
-  //         new Student(4,"student4@email.com",""),
-  //       ]),
-  //       new Event(1,"second event title",new Date("2022-8-23"),
-  //       new Speaker("10","speaker@email.com","torky","",{city:"",street:"",building:""}),
-  //       [
-  //         new Speaker("2","speaker@email.com","speaker name 1","",{city:"",street:"",building:""}),
-  //         new Speaker("3","speaker@email.com","speaker name 2","",{city:"",street:"",building:""}),
-  //       ],
-  //       [
-  //         new Student(1,"student1@email.com",""),
-  //         new Student(2,"student2@email.com",""),
-  //         new Student(3,"student3@email.com",""),
-  //         new Student(4,"student4@email.com",""),
-  //         new Student(5,"student5@email.com",""),
-  //         new Student(6,"student6@email.com",""),
-  //       ]),
-  //   ]
-  constructor(public dbSrv:DbMockService) { }
+  eventsBaseUrl:string= "http://localhost:2525/events/";
+  studentEventsBaseUrl:string= "http://localhost:2525/students/events/";
+  speakerEventsBaseUrl:string= "http://localhost:2525/speakers/events/";
+  constructor(public http:HttpClient) { }
 
-  getEventsByStudentID(id:number):Event[]{
-    return this.dbSrv.getEventsByStudentID(id);
+  getEventsByStudentID(id:number){
+    return this.http.get<{message:string, data:Event[]}>(this.studentEventsBaseUrl + id);
+  }
+
+  getEventsBySpeakerID(id:string){
+    return this.http.get<{message:string, data:Event[]}>(this.speakerEventsBaseUrl + id);
   }
 
   getEventByID(id:number){
-    return this.dbSrv.eventArrayTemp[id];
+    return this.http.get<{message:string, data:Event[]}>(this.eventsBaseUrl + id);
   }
 
   getEvents(){
-    return this.dbSrv.eventArrayTemp;
+    return this.http.get<{message:string, data:Event[]}>(this.eventsBaseUrl);
   }
 
   deleteEventByID(id:number){
-    
+    return this.http.delete<{message:string}>(this.eventsBaseUrl + id);
   }
   updateEvent(id:number, event:Event){
-    
+    // prepare the event object that'll be sent to the server 
+    let AddEventObj={
+      id: id,
+      title: "",
+      date: "",
+      mainSpeakerID: "",
+      otherSpeakersID: [""],
+      studentsID: [0]
+    };
+    AddEventObj.title = event.title;
+    AddEventObj.date = event.date;
+    AddEventObj.mainSpeakerID = event.mainSpeakerID._id;
+    AddEventObj.otherSpeakersID.pop();
+    event.otherSpeakersID.forEach(os=>{
+      AddEventObj.otherSpeakersID.push(os._id);
+    });
+    AddEventObj.studentsID.pop();
+    event.studentsID.forEach(s=>{
+      AddEventObj.studentsID.push(s._id);
+    });
+    return this.http.put<{message:string, data:Event[]}>(this.eventsBaseUrl ,AddEventObj);
   }
   addEvent(event:Event){
-    this.dbSrv.addEvent(event);
+    // prepare the event object that'll be sent to the server 
+    let AddEventObj={
+      // id: 3,
+      title: "",
+      date: "",
+      mainSpeakerID: "",
+      otherSpeakersID: [""],
+      studentsID: [0]
+    };
+    AddEventObj.title = event.title;
+    AddEventObj.date = event.date;
+    AddEventObj.mainSpeakerID = event.mainSpeakerID._id;
+    AddEventObj.otherSpeakersID.pop();
+    event.otherSpeakersID.forEach(os=>{
+      AddEventObj.otherSpeakersID.push(os._id);
+    });
+    AddEventObj.studentsID.pop();
+    event.studentsID.forEach(s=>{
+      AddEventObj.studentsID.push(s._id);
+    });
+    return this.http.post<{message:string, events:Event[]}>(this.eventsBaseUrl ,AddEventObj);
   }
 
 }

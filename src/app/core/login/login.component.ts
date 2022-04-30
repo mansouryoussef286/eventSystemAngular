@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Login } from 'src/app/_models/login';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/login.service';
+import { Subscription } from 'rxjs';
+import { DataService } from 'src/app/data.service';
 
 
 @Component({
@@ -17,24 +19,50 @@ export class LoginComponent implements OnInit {
   };
   errorMsg:string="";
 
-  constructor(public router:Router, public loginSrv:LoginService) { }
+  sub:Subscription|null=null;
+  role:string="";
+  token:string="";
 
-  ngOnInit(): void {
+  constructor(public router:Router, public loginSrv:LoginService, private data:DataService) { }
+
+  ngOnInit() {
   }
 
   signIn(){
-    let logged:boolean = false;
-    let loginID= this.loginSrv.checkCredentials(this.credentials.username, this.credentials.password);
-    if(loginID != -1 && this.credentials.password && this.credentials.username){
-      this.router.navigateByUrl("/speaker/home/"+loginID);
-      logged = true;
-    }
-    if(!logged){
-      this.errorMsg = "email or password is incorrect";
-      setTimeout(()=>{
-        this.errorMsg = "";
-      },3000);
-    }
+    this.sub = this.loginSrv.checkCredentials(this.credentials.username, this.credentials.password).subscribe(
+      data=>{
+        this.token = data.token;
+        // console.log(data);
+        if(data.message.includes("admin")){
+          this.role = "admin";
+          this.router.navigateByUrl("/admin/events");
+        }
+        if(data.message.includes("student")){
+          this.role = "student";
+          let id = JSON.parse(atob(this.token.split('.')[1])).id;
+          this.data.assignStudentID(id);
+          this.router.navigateByUrl("/student/home/"+ id);
+        }
+        if(data.message.includes("speaker")){
+          this.role = "speaker";
+          let id = JSON.parse(atob(this.token.split('.')[1])).id;
+          this.data.assignSpeakerID(id);
+          this.router.navigateByUrl("/speaker/home/"+ id);
+        }
+        // if logged in add the token and role to the local storage
+        if(this.role){
+          sessionStorage.setItem("role",this.role);
+          sessionStorage.setItem("token",this.token);
+          // change logged in the appcomponent
+          this.data.atLogin(true,this.role);
+        }
+      },
+      error => {
+        // console.log(error)
+        this.errorMsg = error.error.message;
+          setTimeout(()=>this.errorMsg = "",3000);
+      }
+    );
   }
 
 }

@@ -7,41 +7,41 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isStudent">
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="role == 'student'">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" routerLink="/student/home/1">Home</a>
+                        <a class="nav-link active" aria-current="page" [routerLink]="['/student/home/',studentID]">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" [routerLink]="['/student/editProfile/',studentID]">Edit Profile</a>
                     </li>
 
-                    <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Dropdown
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li> -->
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
-            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isSpeaker">
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="role == 'speaker'">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" routerLink="/speaker/home/1">Home</a>
+                        <a class="nav-link active" aria-current="page" [routerLink]="['/speaker/home/',speakerID]">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" [routerLink]="['/speaker/editProfile/',studentID]">Edit Profile</a>
+                        <a class="nav-link active" aria-current="page" [routerLink]="['/speaker/editProfile/',speakerID]">Edit Profile</a>
                     </li>
                 </ul>
             </div>
-            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAdmin">
+            <div class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="role == 'admin'">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" routerLink="/admin/events">Events</a>
